@@ -1,10 +1,8 @@
 import rospy
 
-from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry
 from mavros_msgs.msg import CompanionProcessStatus
 from enum import Enum
-from threading import Thread, Lock
 
 
 class MAV_STATE(Enum):
@@ -35,8 +33,6 @@ class OdomBridge:
         output.header.frame_id = msg.header.frame_id
         output.child_frame_id = msg.child_frame_id
         self.mavros_odom_pub.publish(output)
-
-        # self.flag_first_pose_received = True
 
         # Publish system status
         self.last_system_status = self.system_status
