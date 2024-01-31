@@ -1,0 +1,41 @@
+<launch>
+    <arg name="ns" default="/"/>
+    <arg name="fcu_url" default="/dev/ttyACM0"/>
+    <arg name="gcs_url" default="udp://0.0.0.0:14550@14550" />   <!-- QGC running on Ubuntu -->
+    <arg name="tgt_system" default="1" />
+    <arg name="tgt_component" default="1" />
+
+    <arg name="cam_pos_x"   value="0.0" />
+    <arg name="cam_pos_y"   value="0.0" />
+    <arg name="cam_pos_z"   value="0.0" />
+    <arg name="cam_roll"    value="0.0" />
+    <arg name="cam_pitch"   value="1.5708" />
+    <arg name="cam_yaw"     value="0.0" />
+
+    <!-- Launch ZED camera -->
+    <include file="$(find zed_wrapper)/launch/zedm.launch">
+        <arg name="cam_pos_x"   value="$(arg cam_pos_x)" />
+        <arg name="cam_pos_y"   value="$(arg cam_pos_y)" />
+        <arg name="cam_pos_z"   value="$(arg cam_pos_z)" />
+        <arg name="cam_roll"    value="$(arg cam_roll)" />
+        <arg name="cam_pitch"   value="$(arg cam_pitch)" />
+        <arg name="cam_yaw"     value="$(arg cam_yaw)" />
+    </include>
+
+    <!-- Launch Bridge -->
+    <node name="px4_zed_bridge" pkg="px4_zed_bridge" type="px4_zed_bridge.py" output="screen">
+    </node>
+
+    <!-- Launch Mavros -->
+    <group ns="$(arg ns)">
+      <include file="$(find mavros)/launch/node.launch">
+          <arg name="pluginlists_yaml" value="$(find mavros)/launch/px4_pluginlists.yaml" />
+          <!-- Need to change the config file to get the tf topic and get local position in terms of local origin -->
+          <arg name="config_yaml" value="$(find mavros)/launch/px4_config.yaml" />
+          <arg name="fcu_url" value="$(arg fcu_url)" />
+          <arg name="gcs_url" value="$(arg gcs_url)" />
+          <arg name="tgt_system" value="$(arg tgt_system)" />
+          <arg name="tgt_component" value="$(arg tgt_component)" />
+      </include>
+  </group>
+</launch>
