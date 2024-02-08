@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import rospy
 
 from nav_msgs.msg import Odometry
@@ -19,13 +21,14 @@ class MAV_STATE(Enum):
 
 class OdomBridge:
     def __init__(self):
-        rospy.Subscriber("/zed/zed_node/odom", Odometry, self.odom_callback, queue_size=10)
+        rospy.Subscriber("/zedm/zed_node/odom", Odometry, self.odom_callback)
         self.mavros_odom_pub = rospy.Publisher("/mavros/odometry/out", Odometry, queue_size=10)
-        self.mavros_system_status_pub = rospy.Subscriber("/mavros/companion_process/status", CompanionProcessStatus,
+        self.mavros_system_status_pub = rospy.Publisher("/mavros/companion_process/status", CompanionProcessStatus,
                                                          queue_size=1)
 
         self.system_status = MAV_STATE.MAV_STATE_UNINIT
         self.last_system_status = MAV_STATE.MAV_STATE_UNINIT
+        # rospy.spin()
 
     def odom_callback(self, msg):
         # Publish odometry data
@@ -33,6 +36,7 @@ class OdomBridge:
         output.header.frame_id = msg.header.frame_id
         output.child_frame_id = msg.child_frame_id
         self.mavros_odom_pub.publish(output)
+        # print(msg)
 
         # Publish system status
         self.last_system_status = self.system_status
@@ -40,7 +44,7 @@ class OdomBridge:
             self.system_status = MAV_STATE.MAV_STATE_FLIGHT_TERMINATION
         elif msg.pose.covariance[0] == 0.1:
             self.system_status = MAV_STATE.MAV_STATE_CRITICAL
-        elif msg.pose.covariance[0] == 0.01:
+        elif msg.pose.covariance[0] < 0.01:
             self.system_status = MAV_STATE.MAV_STATE_ACTIVE
         else:
             rospy.logwarn("Unexpected vision sensor variance")
@@ -53,7 +57,7 @@ class OdomBridge:
 
         status_msg.header.stamp = rospy.Time.now()
         status_msg.component = 197  # MAV_COMP_ID_VISUAL_INERTIAL_ODOMETRY
-        status_msg.state = self.system_status
+        status_msg.state = self.system_status.value
 
         self.mavros_system_status_pub.publish(status_msg)
 
@@ -61,7 +65,7 @@ class OdomBridge:
 if __name__ == '__main__':
     rospy.init_node('px4_zed_bridge')
     bridge = OdomBridge()
-
+    #rospy.spin()
     r = rospy.Rate(1)
     while not rospy.is_shutdown():
         bridge.publish_system_status()
