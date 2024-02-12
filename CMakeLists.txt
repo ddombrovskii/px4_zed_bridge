@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(px4_zed_bridge)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -110,9 +110,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES px4_zed_bridge
-#  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs mavlink mavros mavros_extras mavros_msgs nav_msgs roscpp rospy tf
+  INCLUDE_DIRS include
+  LIBRARIES px4_zed_bridge
+  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs mavlink mavros mavros_extras mavros_msgs nav_msgs roscpp rospy tf
 #  DEPENDS system_lib
 )
 
@@ -127,20 +127,22 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+set(PX4_ZED_BRIDGE_CPP_FILES  "src/px4_zed_bridge.cpp"
+                              "src/px4_zed_bridge_node.cpp"
+)
+
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/px4_zed_bridge.cpp
-# )
+add_library(${PROJECT_NAME} "${PX4_REALSENSE_BRIDGE_CPP_FILES}")
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/px4_zed_bridge_node.cpp)
+add_executable(${PROJECT_NAME}_node src/px4_zed_bridge_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -153,9 +155,11 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_node
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  ${YAML_CPP_LIBRARIES}
+)
 
 #############
 ## Install ##
