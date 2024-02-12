@@ -16,7 +16,7 @@ namespace bridge {
 
         status_mutex_.reset(new std::mutex);
 
-        worker_ = std:thread(&PX4_ZED_Bridge::publishSystemStatus, this);
+        worker_ = std::thread(&PX4_ZED_Bridge::publishSystemStatus, this);
     };
 
     PX4_ZED_Bridge::~PX4_ZED_Bridge() { }
@@ -31,7 +31,7 @@ namespace bridge {
         flag_first_pose_received = true;
 
         {   // lock mutex
-            std::lock_guard<std::mutex> status_guard(*(status_mutex));
+            std::lock_guard<std::mutex> status_guard(*(status_mutex_));
 
             last_system_status_ = system_status_;
 
@@ -69,7 +69,7 @@ namespace bridge {
 
             if (flag_first_pose_received == true)
             {
-                if (ros::Time::now() - last_callback_time)
+                if ((ros::Time::now()-last_callback_time) > ros::Duration(0.5))
                 {
                     ROS_WARN_STREAM("Stopped receiving data from ZED Mini");
                     system_status_ = MAV_STATE::MAV_STATE_FLIGHT_TERMINATION;
@@ -77,7 +77,7 @@ namespace bridge {
 
                 mavros_msgs::CompanionProcessStatus status_msg;
 
-                status_msg.header.stamp = ros::Time:now();
+                status_msg.header.stamp = ros::Time::now();
                 status_msg.component = 197; // MAV_COMP_ID_VISUAL_INERTIAL_ODOMETRY
 
                 {   // lock mutex

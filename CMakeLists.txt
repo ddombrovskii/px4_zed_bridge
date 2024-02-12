@@ -112,7 +112,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES px4_zed_bridge
-  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs mavlink mavros mavros_extras mavros_msgs nav_msgs roscpp rospy tf
+  CATKIN_DEPENDS roscpp rospy mavros_msgs mav_msgs sensor_msgs message_runtime tf
 #  DEPENDS system_lib
 )
 
@@ -132,7 +132,7 @@ set(PX4_ZED_BRIDGE_CPP_FILES  "src/px4_zed_bridge.cpp"
 )
 
 ## Declare a C++ library
-add_library(${PROJECT_NAME} "${PX4_REALSENSE_BRIDGE_CPP_FILES}")
+add_library(${PROJECT_NAME} "${PX4_ZED_BRIDGE_CPP_FILES}")
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

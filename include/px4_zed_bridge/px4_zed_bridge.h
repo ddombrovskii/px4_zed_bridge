@@ -37,7 +37,7 @@ namespace bridge {
             // Subscribers
             ros::Subscriber odom_sub_;
             // Publishers
-            ros::Publisher mavros_odom_sub_;
+            ros::Publisher mavros_odom_pub_;
             ros::Publisher mavros_system_status_pub_;
 
             MAV_STATE system_status_{MAV_STATE::MAV_STATE_UNINIT};
