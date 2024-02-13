@@ -59,6 +59,8 @@ namespace bridge {
                 mavros_system_status_pub_.publish(status_msg);
             }
         }
+
+        last_callback_time = ros::Time::now();
     }
 
     void PX4_ZED_Bridge::publishSystemStatus() {
