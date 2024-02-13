@@ -8,7 +8,7 @@
 
 namespace bridge {
     PX4_ZED_Bridge::PX4_ZED_Bridge(const ros::NodeHandle& nh) : nh_(nh) {
-        odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>("/zedm/zed_node/odom", 10, &PX4_ZED_Bridge::odomCallback, this);
+        odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>("/zedm/zed_node/odom_throttled", 10, &PX4_ZED_Bridge::odomCallback, this);
         mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
         mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
 
