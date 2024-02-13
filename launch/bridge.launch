@@ -27,7 +27,7 @@
     </include>
 
     <!-- Launch Bridge -->
-    <node name="px4_zed_bridge" pkg="px4_zed_bridge" type="px4_zed_bridge.py" output="screen">
+    <node name="px4_zed_bridge_node" pkg="px4_zed_bridge" type="px4_zed_bridge_node" output="screen">
     </node>
 
     <!-- Launch Mavros -->
