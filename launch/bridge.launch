@@ -1,7 +1,7 @@
 <launch>
     <arg name="ns"		default="/"/>
-    <arg name="fcu_url"		default="/dev/ttyACM0"/>
-    <arg name="gcs_url"		default="udp://@" />   <!-- QGC running on Ubuntu -->
+    <arg name="fcu_url"		default="/dev/ttyACM0:500000"/>
+    <arg name="gcs_url"		default="udp://@" />
     <arg name="tgt_system"	default="1" />
     <arg name="tgt_component"	default="1" />
 
@@ -27,9 +27,9 @@
     </include>
 
     <!-- Throttle odometry messages to a fixed rate around 25Hz -->
-  <node name="odom_throttler" type="drop" pkg="topic_tools" 
-    args="/zedm/zed_node/odom 7 8 /zedm/zed_node/odom_throttled" >
-  </node>
+    <node name="odom_throttler" type="drop" pkg="topic_tools" 
+      args="/zedm/zed_node/odom 7 8 /zedm/zed_node/odom_throttled" >
+    </node>
 
     <!-- Launch Bridge -->
     <node name="px4_zed_bridge_node" pkg="px4_zed_bridge" type="px4_zed_bridge_node" output="screen">
