@@ -5,20 +5,12 @@
     <arg name="tgt_system"	default="1" />
     <arg name="tgt_component"	default="1" />
 
-    <arg name="cam_pos_x"	default="0.0" />
+    <arg name="cam_pos_x"	default="0.1" />
     <arg name="cam_pos_y"	default="0.0" />
-    <arg name="cam_pos_z"	default="0.0" />
+    <arg name="cam_pos_z"	default="-0.1" />
     <arg name="cam_roll"	default="0.0" />
-    <arg name="cam_pitch"	default="0.0" />
+    <arg name="cam_pitch"	default="1.5708" />
     <arg name="cam_yaw"		default="0.0" />
-
-    <!-- Launch static transform publishers -->
-    <!-- ZED Mini downfacing -->
-    <node pkg="tf" type="static_transform_publisher" name="tf_baseLink_cameraPose"
-        args="0.127 0 -0.0762 0 0 0 base_link camera_base_link 1000"/>
-        
-    <node pkg="tf" type="static_transform_publisher" name="tf_odom_cameraOdom"
-          args="0 0 0 0 0 0 odom camera_odom_frame 1000"/>
 
     <!-- Throttle odometry messages to a fixed rate around 25Hz -->
     <node name="odom_throttler" type="drop" pkg="topic_tools" 
@@ -55,15 +47,5 @@
           <arg name="tgt_component" value="$(arg tgt_component)" />
       </include>
     </group>
-
-    <!-- Copter visualization -->
-    <node name="visualization" pkg="mavros_extras" type="visualization">
-        <remap to="mavros/local_position/pose" from="local_position"/>
-        <remap to="mavros/setpoint_position/local" from="local_setpoint"/>
-        <param name="fixed_frame_id" value="map"/>
-        <param name="child_frame_id" value="base_link"/>
-        <param name="marker_scale" value="1"/>
-        <param name="max_track_size" value="20"/>
-        <param name="num_rotors" value="4"/>
-    </node>
+    
 </launch>
