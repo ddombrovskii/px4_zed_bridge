@@ -67,6 +67,8 @@ namespace bridge {
 
         while (ros::ok())
         {
+            ros.Duration(1).sleep();
+            
             if (flag_first_pose_received == true)
             {
                 if ((ros::Time::now()-last_callback_time) > ros::Duration(0.5))
