@@ -12,11 +12,6 @@
     <arg name="cam_pitch"	default="0.7854" />
     <arg name="cam_yaw"		default="0.0" />
 
-    <!-- Throttle odometry messages to a fixed rate around 25Hz -->
-    <node name="odom_throttler" type="drop" pkg="topic_tools" 
-      args="/zedm/zed_node/odom 7 8 /zedm/zed_node/odom_throttled" >
-    </node>
-
     <!-- web video server -->
     <node name="web_video_server" pkg="web_video_server" type="web_video_server" required="false" respawn="true" respawn_delay="5">
     </node>
