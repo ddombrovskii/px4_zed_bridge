@@ -4,6 +4,7 @@
 #include <nav_msgs/Odometry.h>
 #include <mavros_msgs/CompanionProcessStatus.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
@@ -46,7 +47,7 @@ namespace bridge {
 
             std::unique_ptr<std::mutex> status_mutex_;
 
-            void odomCallback(const nav_msgs::Odometry& msg);
+            void odomCallback(const geometry_msgs::PoseWithCovarianceStamped& msg);
 
             bool flag_first_pose_received{false};
 
