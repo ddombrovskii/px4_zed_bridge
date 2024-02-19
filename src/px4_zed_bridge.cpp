@@ -1,5 +1,6 @@
 #include "../include/px4_zed_bridge/px4_zed_bridge.h"
 
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -9,7 +10,7 @@
 namespace bridge {
     PX4_ZED_Bridge::PX4_ZED_Bridge(const ros::NodeHandle& nh) : nh_(nh) {
         odom_sub_ = nh_.subscribe<const nav_msgs::Odometry&>("/zedm/zed_node/odom_throttled", 10, &PX4_ZED_Bridge::odomCallback, this);
-        mavros_odom_pub_ = nh_.advertise<nav_msgs::Odometry>("/mavros/odometry/out", 10);
+        mavros_pose_pub_ = nh_.advertise<geometry_msgs::PoseStamped>("/mavros/vision_pose/pose", 10);
         mavros_system_status_pub_ = nh_.advertise<mavros_msgs::CompanionProcessStatus>("/mavros/companion_process/status", 1);
 
         last_callback_time = ros::Time::now();
@@ -23,10 +24,11 @@ namespace bridge {
 
     void PX4_ZED_Bridge::odomCallback(const nav_msgs::Odometry& msg) {
         // publish odometry msg
-        nav_msgs::Odometry output = msg;
+        geometry_msgs::PoseStamped output;
+        output.header.stamp = ros::Time::now();
         output.header.frame_id = msg.header.frame_id;
-        output.child_frame_id = msg.child_frame_id;
-        mavros_odom_pub_.publish(output);
+        output.pose = msg.pose.pose;
+        mavros_pose_pub_.publish(output);
 
         flag_first_pose_received = true;
 
