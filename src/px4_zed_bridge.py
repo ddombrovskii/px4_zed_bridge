@@ -42,7 +42,7 @@ class OdomBridge:
         self.last_system_status = self.system_status
         if msg.pose.covariance[0] > 0.1:
             self.system_status = MAV_STATE.MAV_STATE_FLIGHT_TERMINATION
-        elif msg.pose.covariance[0] == 0.1:
+        elif 0.01 <= msg.pose.covariance[0] <= 0.1:
             self.system_status = MAV_STATE.MAV_STATE_CRITICAL
         elif msg.pose.covariance[0] < 0.01:
             self.system_status = MAV_STATE.MAV_STATE_ACTIVE
